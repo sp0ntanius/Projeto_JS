@@ -1,4 +1,6 @@
-import { desenharNoCarrinhoSimples, lerLocalStorage, apagarDoLocalStorage, salvarLocalStorage } from "./src/utilidades";
+import { catalogo, desenharNoCarrinhoSimples, lerLocalStorage, apagarDoLocalStorage, salvarLocalStorage } from "./src/utilidades";
+
+const idsProdutosNoCheckout = lerLocalStorage('carrinho') 
 
 function desenharProdutosCheckout() {
     const idsProdutoCarrinhoComQtdd = lerLocalStorage('carrinho') ?? {}
@@ -28,7 +30,19 @@ function finalizarCompra(evento) {
     window.location.href = './pedidos.html'
 }
 
+function precoCarrinhoNoCheckout() {
+    const precoCheckout = document.getElementById("preco-total-checkout")
+    let precoTotalCheckout = 0
+
+    for (const idProduto in idsProdutosNoCheckout) {
+        precoTotalCheckout += catalogo.find(p => p.id == idProduto).preco * idsProdutosNoCheckout[idProduto]
+    }
+
+    precoCheckout.innerHTML = `Total: $${precoTotalCheckout}`
+}
 
 desenharProdutosCheckout()
+
+precoCarrinhoNoCheckout()
 
 document.addEventListener('submit', (evt) => finalizarCompra(evt))
